@@ -1,11 +1,18 @@
 // The name of shader (!= file name) is used when you set a shader to a material.
 Shader "Custom/Sample_001"
 {
-    // Parameters in "Properties" appear in the inspector view and can be modified by your operation and scripts.
+    // Parameters in "Properties" appear in the inspector view and can be modified by your operation and C# scripts.
     Properties
     {
-        // PARAMETER_NAME ("INSPECTOR_LABEL", TYPE) = DEFAULT_VALUE { OPTIONS }
+        // PROPERTY_NAME ("INSPECTOR_LABEL", TYPE) = DEFAULT_VALUE { OPTIONS }
         _MainTex ("Texture", 2D) = "white" {}
+
+        /*
+        // These are other samples.
+        _Float ("Float", float) = 0.1
+        _Int ("Int", int) = 5
+        _Range ("Range", Range(0.0, 1.0)) = 0.3
+        */
     }
 
     // Shaders determine the color in each pixel as "SubShader" instructs.
@@ -19,14 +26,14 @@ Shader "Custom/Sample_001"
 
         Pass
         {
+            // charms!!!
             CGPROGRAM
             #pragma vertex vert
             #pragma fragment frag
-            // make fog work
-            #pragma multi_compile_fog
-
+            #pragma multi_compile_fog // make fog work
             #include "UnityCG.cginc"
 
+            // Parameters to vertex shader.
             struct appdata
             {
                 float4 vertex : POSITION;
@@ -41,11 +48,11 @@ Shader "Custom/Sample_001"
                 float4 vertex : SV_POSITION;
             };
 
-            // This "_MainTex" is equal to the "_MainTex" in "Properties".
-            sampler2D _MainTex;
-            // "TEXTURE_NAME_ST" means tilling and offset values in inspector view.
-            float4 _MainTex_ST;
+            // Parameters from "Properties".
+            sampler2D _MainTex; // This "_MainTex" is equal to the "_MainTex" in "Properties".
+            float4 _MainTex_ST; // "TEXTURE_NAME_ST" means tilling and offset values of _MainTex in inspector view.
 
+            // Vertex shader.
             v2f vert (appdata v)
             {
                 v2f o;
@@ -55,6 +62,7 @@ Shader "Custom/Sample_001"
                 return o;
             }
 
+            // Fragment shader.
             fixed4 frag (v2f i) : SV_Target
             {
                 // sample the texture
